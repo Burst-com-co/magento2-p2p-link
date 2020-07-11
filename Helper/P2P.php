@@ -190,7 +190,7 @@ class P2P extends AbstractHelper{
             ];
             $this->mail($sender, $sentToEmail, $sentToName);
             if (!\is_null($this->config->getCopyAddressEmail())) {
-                $this->mail($this->config->getCopyAddressEmail(),'Seller');
+                $this->mail($sender, $this->config->getCopyAddressEmail(),'Seller');
             }
         } catch (Exception $e) {
             $this->logger->addInfo('P2P LINK', ["Error"=>json_encode($e->getMessage())]);
