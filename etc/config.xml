@@ -4,7 +4,7 @@
         <payment>
             <link>
                 <payment_action>authorize</payment_action><!-- You can use another methor like capture  -->
-                <model>Burst\Link\Model\PaymentMethod</model>
+                <model>Burst\Link\Model\Payment\PaymentMethod</model>
                 <active>1</active>
                 <title>Link P2P</title>
                 <order_status>pending_payment</order_status><!-- set default order status-->

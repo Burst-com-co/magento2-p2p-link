@@ -23,15 +23,7 @@ class Index extends \Magento\Framework\App\Action\Action
 		/** @var \Magento\Framework\View\Result\Page $resultPage */
         $resultPage = $this->_pageFactory->create();
 		$resultPage->getLayout()->initMessages();
-		$collection = $this->model->getCollection()
-			->addFieldToFilter('valid_until', ['gteq' => date('Y-m-d H:i:s')])
-			->addFieldToFilter('status', ['eq' => 'CREATED']);
-		foreach($collection as $item){
-			$data=$item->getData();
-			$payment_status=$this->P2P->getPaymentStatus($data["increment_id"], $data["amount"]);
-		}
 		$resultPage->getLayout()->getBlock('test_index_index')->setName('Jonathan');
-		$resultPage->getLayout()->getBlock('test_index_index')->setOrders($collection);
 		return $resultPage;
 	}
 }
