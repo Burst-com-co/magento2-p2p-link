@@ -1,4 +1,4 @@
-P2P Link in Magento 2 v1.0.1
+P2P Link in Magento 2 v1.0.2
 =====================
 
 How to Install

@@ -55,7 +55,7 @@ class P2P extends AbstractHelper{
         $this->createRequestArray();
         $this->setSoapHeader();
         $this->createPaymentRequest();
-        $this->finishRequest();
+        // $this->finishRequest();
     }
     private function connectToSoapServer(){
         try {
@@ -123,7 +123,8 @@ class P2P extends AbstractHelper{
                 'payload' => $this->_requestArray
             ));
             $array = json_decode(json_encode($this->_response), True);
-            $soap_response=$array;
+            $this->logger->addInfo('P2P LINK', ["Error"=>$array]);
+             $soap_response=$array;
             
             if ($this->_response) {
                 if ($soap_response["createRequestResult"]["status"]["status"] == 'OK') {
@@ -187,34 +188,38 @@ class P2P extends AbstractHelper{
                 'name' => $this->config->getStorename(),
                 'email' => $this->config->getStoreEmail()
             ];
-            $transport = $this->_transportBuilder
-                ->setTemplateIdentifier('burst_link_custom_email_template')
-                ->setTemplateOptions(
-                    [
-                        'area' => \Magento\Framework\App\Area::AREA_FRONTEND, /* here you can defile area and store of template for which you prepare it */
-                        'store' => $this->config->getStoreID(),
-                    ]
-                )
-                //Email template variables
-                ->setTemplateVars(
-                    [
-                        'name'=> $this->_name,
-                        'store_name'=>$this->config->getStorename(),
-                        'reference'=>$this->_reference,
-                        'process_url'=>$this->_p2p_url,
-                        'email_subject'=>$this->config->getEmailSubject(),
-                    ]
-                )
-                ->setFrom($sender)
-                ->addTo($sentToEmail,$sentToName)
-                ->getTransport();
+            $this->mail($sender);
             if (!\is_null($this->config->getCopyAddressEmail())) {
-                $transport->addTo($this->config->getCopyAddressEmail(),'Seller');
+                $this->mail($sender);
             }
-            $transport->sendMessage();
         } catch (Exception $e) {
             $this->logger->addInfo('P2P LINK', ["Error"=>json_encode($e->getMessage())]);
         }
+    }
+    public function mail($sender)
+    {
+        $transport = $this->_transportBuilder
+            ->setTemplateIdentifier('burst_link_custom_email_template')
+            ->setTemplateOptions(
+                [
+                    'area' => \Magento\Framework\App\Area::AREA_FRONTEND, /* here you can defile area and store of template for which you prepare it */
+                    'store' => $this->config->getStoreID(),
+                ]
+            )
+            //Email template variables
+            ->setTemplateVars(
+                [
+                    'name'=> $this->_name,
+                    'store_name'=>$this->config->getStorename(),
+                    'reference'=>$this->_reference,
+                    'process_url'=>$this->_p2p_url,
+                    'email_subject'=>$this->config->getEmailSubject(),
+                ]
+            )
+            ->setFrom($sender)
+            ->addTo($this->config->getCopyAddressEmail(),'Seller')
+            ->getTransport();
+        $transport->sendMessage();
     }
     public function insertRecord($data)
     {
