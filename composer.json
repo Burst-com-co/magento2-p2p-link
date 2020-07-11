@@ -2,7 +2,7 @@
     "name": "burst-com-co/magento2-p2p-link",
     "description": "Module to genereta payment link in P2P",
     "type": "magento2-module",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": [
       "OSL-3.0",
       "AFL-3.0"

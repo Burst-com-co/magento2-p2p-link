@@ -188,15 +188,15 @@ class P2P extends AbstractHelper{
                 'name' => $this->config->getStorename(),
                 'email' => $this->config->getStoreEmail()
             ];
-            $this->mail($sender);
+            $this->mail($sender, $sentToEmail, $sentToName);
             if (!\is_null($this->config->getCopyAddressEmail())) {
-                $this->mail($sender);
+                $this->mail($this->config->getCopyAddressEmail(),'Seller');
             }
         } catch (Exception $e) {
             $this->logger->addInfo('P2P LINK', ["Error"=>json_encode($e->getMessage())]);
         }
     }
-    public function mail($sender)
+    public function mail($sender, $sentToEmail, $sentToName)
     {
         $transport = $this->_transportBuilder
             ->setTemplateIdentifier('burst_link_custom_email_template')
@@ -217,7 +217,7 @@ class P2P extends AbstractHelper{
                 ]
             )
             ->setFrom($sender)
-            ->addTo($this->config->getCopyAddressEmail(),'Seller')
+            ->addTo($sentToEmail, $sentToName)
             ->getTransport();
         $transport->sendMessage();
     }
