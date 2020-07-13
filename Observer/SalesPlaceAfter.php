@@ -47,9 +47,11 @@ class SalesPlaceAfter implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $this->defineVariablesToLink($observer);
-        $this->P2P->createLink($this->name, $this->lastname, $this->document, $this->mail, 
-            $this->phone, $this->reference, $this->total_amount);
+        if($this->payment_code=='link'){
+            $this->defineVariablesToLink($observer);
+            $this->P2P->createLink($this->name, $this->lastname, $this->document, $this->mail, 
+                $this->phone, $this->reference, $this->total_amount);
+        }
     }
     private function defineVariablesToLink($observer){
         //Order Data
